@@ -45,3 +45,9 @@ apps/web/prisma/*.db
 
 # Docker
 docker-compose.yml
+
+# Playwright
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

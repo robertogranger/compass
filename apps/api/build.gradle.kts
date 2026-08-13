@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "4.1.0"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("com.adarshr.test-logger") version "4.0.0"
 }
 
 group = "com.compass"
@@ -40,4 +41,17 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+testlogger {
+		theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA
+		showExceptions = true
+		showStackTraces = true
+		showFullStackTraces = false
+		showCauses = true
+		showSummary = true
+		showPassed = true
+		showSkipped = true
+		showFailed = true
+		showOnlySlow = false
 }
