@@ -35,6 +35,8 @@ jobs:
           testPaths: "apps/web/test-results/junit.xml"
           projectKey: "COM"
           testExecKey: ''
+          combineInSingleTestExec: "true"
+
 
   test-api:
     name: API (JUnit)
@@ -80,6 +82,7 @@ jobs:
           testPaths: "apps/api/build/test-results/test/*.xml"
           projectKey: "COM"
           testExecKey: ''
+          combineInSingleTestExec: "true"
 
   test-e2e:
     name: E2E (Playwright)
@@ -121,3 +124,4 @@ jobs:
           testPaths: "test-results/junit.xml"
           projectKey: "COM"
           testExecKey: ''
+          combineInSingleTestExec: "true"
