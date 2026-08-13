@@ -14,7 +14,7 @@ apps/api/build/
 apps/api/.gradle/
 *.class
 *.jar
-!.mvn/wrapper/maven-wrapper.jar
+!apps/api/gradle/wrapper/gradle-wrapper.jar
 
 # Env
 .env
