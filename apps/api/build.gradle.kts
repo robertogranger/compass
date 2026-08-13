@@ -55,3 +55,5 @@ testlogger {
 		showFailed = true
 		showOnlySlow = false
 }
+
+

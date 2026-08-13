@@ -8,5 +8,9 @@ export default defineConfig({
     },
     test: {
         environment: 'jsdom',
+        reporters: ['default', 'junit'],
+        outputFile: {
+            junit: './test-results/junit.xml',
+        },
     },
 })

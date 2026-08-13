@@ -25,6 +25,13 @@ jobs:
       - name: Run web tests
         run: npm run test:web
 
+      - name: Upload results to Zephyr
+        if: always()
+        run: |
+          curl -H "Authorization: Bearer ${{ secrets.ZEPHYR_API_TOKEN }}" \
+            -F "file=@apps/web/test-results/junit.xml;type=application/xml" \
+            "https://api.zephyrscale.smartbear.com/v2/automations/executions/junit?projectKey=COM&autoCreateTestCases=true"
+
   test-api:
     name: API (JUnit)
     runs-on: ubuntu-latest
@@ -50,6 +57,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '26'
+          cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         run: chmod +x apps/api/gradlew
@@ -57,6 +65,19 @@ jobs:
       - name: Run API tests
         working-directory: apps/api
         run: ./gradlew test
+
+      - name: Zip JUnit XML results
+        if: always()
+        working-directory: apps/api
+        run: cd build/test-results/test && zip -r ../../../junit-results.zip .
+
+      - name: Upload results to Zephyr
+        if: always()
+        working-directory: apps/api
+        run: |
+          curl -H "Authorization: Bearer ${{ secrets.ZEPHYR_API_TOKEN }}" \
+            -F "file=@junit-results.zip;type=application/x-zip-compressed" \
+            "https://api.zephyrscale.smartbear.com/v2/automations/executions/junit?projectKey=COM&autoCreateTestCases=true"
 
   test-e2e:
     name: E2E (Playwright)
@@ -87,3 +108,10 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+      - name: Upload results to Zephyr
+        if: always()
+        run: |
+          curl -H "Authorization: Bearer ${{ secrets.ZEPHYR_API_TOKEN }}" \
+            -F "file=@test-results/junit.xml;type=application/xml" \
+            "https://api.zephyrscale.smartbear.com/v2/automations/executions/junit?projectKey=COM&autoCreateTestCases=true"
