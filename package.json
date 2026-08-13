@@ -23,7 +23,6 @@
     "concurrently": "^10.0.4"
   },
   "workspaces": [
-    "apps/web",
-    "packages/*"
+    "apps/web"
   ]
 }
