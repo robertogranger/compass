@@ -1,0 +1,29 @@
+{
+  "name": "compass",
+  "version": "0.0.1",
+  "private": "true",
+  "engines": {
+    "node": ">=20.11.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n web,api -c blue,yellow \"npm run dev --workspace=web\" \"npm run dev:api\"",
+    "dev:api": "cd apps/api && ./gradlew bootRun",
+
+    "test": "npm run test:web && npm run test:api",
+    "test:web": "npm run test --workspace=web",
+    "test:api": "cd apps/api && ./gradlew test",
+    "test:e2e": "npm run test:e2e --workspace=web",
+
+    "lint": "npm run lint:web && npm run lint:api",
+    "lint:web": "npm run lint --workspace=web",
+    "lint:api": "cd apps/api && ./gradlew check"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.4"
+  },
+  "workspaces": [
+    "apps/web",
+    "packages/*"
+  ]
+}
