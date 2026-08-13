@@ -25,14 +25,16 @@ jobs:
       - name: Run web tests
         run: npm run test:web
 
-      - name: Upload results to Zephyr
+      - name: Import results to Xray
         if: always()
-        env:
-          ZEPHYR_TOKEN: ${{ secrets.ZEPHYR_API_TOKEN }}
-        run: |
-          curl -v -H "Authorization: Bearer ${ZEPHYR_TOKEN}" \
-            -F "file=@apps/web/test-results/junit.xml;type=application/xml" \
-            "https://api.zephyrscale.smartbear.com/v2/automations/executions/junit?projectKey=COM&autoCreateTestCases=true"
+        uses: mikepenz/xray-action@v4.0.1
+        with:
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+          testFormat: "junit"
+          testPaths: "apps/web/test-results/junit.xml"
+          projectKey: "COM"
+          testExecKey: ''
 
   test-api:
     name: API (JUnit)
@@ -68,18 +70,16 @@ jobs:
         working-directory: apps/api
         run: ./gradlew test
 
-      - name: Zip JUnit XML results
+      - name: Import results to Xray
         if: always()
-        working-directory: apps/api
-        run: cd build/test-results/test && zip -r ../../../junit-results.zip .
-
-      - name: Upload results to Zephyr
-        if: always()
-        working-directory: apps/api
-        run: |
-          curl -H "Authorization: Bearer ${{ secrets.ZEPHYR_API_TOKEN }}" \
-            -F "file=@junit-results.zip;type=application/x-zip-compressed" \
-            "https://api.zephyrscale.smartbear.com/v2/automations/executions/junit?projectKey=COM&autoCreateTestCases=true"
+        uses: mikepenz/xray-action@v4.0.1
+        with:
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+          testFormat: "junit"
+          testPaths: "apps/api/build/test-results/test/*.xml"
+          projectKey: "COM"
+          testExecKey: ''
 
   test-e2e:
     name: E2E (Playwright)
@@ -111,9 +111,13 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-      - name: Upload results to Zephyr
+      - name: Import results to Xray
         if: always()
-        run: |
-          curl -H "Authorization: Bearer ${{ secrets.ZEPHYR_API_TOKEN }}" \
-            -F "file=@test-results/junit.xml;type=application/xml" \
-            "https://api.zephyrscale.smartbear.com/v2/automations/executions/junit?projectKey=COM&autoCreateTestCases=true"
+        uses: mikepenz/xray-action@v4.0.1
+        with:
+          username: ${{ secrets.XRAY_CLIENT_ID }}
+          password: ${{ secrets.XRAY_CLIENT_SECRET }}
+          testFormat: "junit"
+          testPaths: "test-results/junit.xml"
+          projectKey: "COM"
+          testExecKey: ''
