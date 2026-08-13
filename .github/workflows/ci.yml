@@ -27,8 +27,10 @@ jobs:
 
       - name: Upload results to Zephyr
         if: always()
+        env:
+          ZEPHYR_TOKEN: ${{ secrets.ZEPHYR_API_TOKEN }}
         run: |
-          curl -H "Authorization: Bearer ${{ secrets.ZEPHYR_API_TOKEN }}" \
+          curl -v -H "Authorization: Bearer ${ZEPHYR_TOKEN}" \
             -F "file=@apps/web/test-results/junit.xml;type=application/xml" \
             "https://api.zephyrscale.smartbear.com/v2/automations/executions/junit?projectKey=COM&autoCreateTestCases=true"
 
@@ -73,11 +75,10 @@ jobs:
 
       - name: Upload results to Zephyr
         if: always()
-        env:
-          ZEPHYR_TOKEN: ${{ secrets.ZEPHYR_API_TOKEN }}
+        working-directory: apps/api
         run: |
-          curl -v -H "Authorization: Bearer ${ZEPHYR_TOKEN}" \
-            -F "file=@apps/web/test-results/junit.xml;type=application/xml" \
+          curl -H "Authorization: Bearer ${{ secrets.ZEPHYR_API_TOKEN }}" \
+            -F "file=@junit-results.zip;type=application/x-zip-compressed" \
             "https://api.zephyrscale.smartbear.com/v2/automations/executions/junit?projectKey=COM&autoCreateTestCases=true"
 
   test-e2e:
