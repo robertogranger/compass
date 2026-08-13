@@ -42,3 +42,6 @@ Thumbs.db
 
 # Prisma
 apps/web/prisma/*.db
+
+# Docker
+docker-compose.yml
